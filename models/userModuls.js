@@ -29,12 +29,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: 'password is required',
       maxlength: [64, 'Password must have less or equal then 64 characters'],
-      minlength: [8, 'Password must have more or equal then 8 characters']
+      minlength: [8, 'Password must have more or equal then 8 characters'],
+      select: false
     },
     confirmPassword: {
       type: String,
-      maxlength: [64, 'Password must have less or equal then 64 characters'],
-      minlength: [8, 'Password must have more or equal then 8 characters'],
       validate: {
         validator: function(val) {
           // this only points to current doc on NEW document creation
@@ -55,6 +54,12 @@ userSchema.pre('save', async function(next) {
   this.confirmPassword = undefined;
   return next();
 });
+userSchema.methods.correctPassword = async function(
+  candidatePassword,
+  userPassword
+) {
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
