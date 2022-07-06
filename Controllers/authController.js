@@ -65,6 +65,15 @@ exports.protect = catchAsync(async (req, res, next) => {
   if (await freshUser.changedPasswordAfter(decoded.iat)) {
     return next(new AppError('Logging again, Token is changed', 401));
   }
-
+  req.user = freshUser;
   next();
 });
+
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return next(new AppError('You restrict this route', 403));
+    }
+    next();
+  };
+};
