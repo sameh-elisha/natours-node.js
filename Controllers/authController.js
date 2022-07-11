@@ -12,6 +12,23 @@ const signToken = id => {
     expiresIn: process.env.JWT_EXPIRES_IN
   });
 };
+const createSendToken = (user, statusCode, res) => {
+  const token = signToken(user._id);
+  user.password = undefined;
+  const cookieOptions = {
+    expires: new Date(
+      process.env.JWT_EXPIRES_IN_COOKIE * Date.now() * 60 * 60 * 1000 * 24
+    ),
+    httpOnly: true
+  };
+
+  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+
+  res.cookie('jwt', token, cookieOptions);
+
+  res.status(statusCode).json({ status: 'Success', token, data: { user } });
+};
+
 exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
     name: req.body.name,
@@ -19,8 +36,9 @@ exports.signup = catchAsync(async (req, res, next) => {
     password: req.body.password,
     confirmPassword: req.body.confirmPassword
   });
-  const token = signToken(newUser._id);
-  res.status(201).json({ status: 'Success', user: newUser, token });
+  createSendToken(newUser, 201, res);
+  // const token = signToken(newUser._id);
+  // res.status(201).json({ status: 'Success', user: newUser, token });
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -42,8 +60,10 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Email or password incorrect.', 401));
   }
   // 3) send token to clint
-  const token = signToken(user._id);
-  res.status(201).json({ status: 'Success', token });
+  createSendToken(user, 201, res);
+
+  // const token = signToken(user._id);
+  // res.status(201).json({ status: 'Success', token });
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -131,8 +151,10 @@ exports.resetPasswordCurrentUser = catchAsync(async (req, res, next) => {
   }
   user.password = req.body.newPassword;
   await user.save();
-  const token = signToken(user._id);
-  res.status(201).json({ status: 'Success', user, token });
+  createSendToken(user, 201, res);
+
+  // const token = signToken(user._id);
+  // res.status(201).json({ status: 'Success', user, token });
 });
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
