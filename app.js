@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 
 const limitRate = require('express-rate-limit');
+const helmet = require('helmet');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const AppError = require('./utils/appError');
@@ -10,6 +11,8 @@ const globErrorHandler = require('./Controllers/errorController');
 const app = express();
 
 // 1) Global MIDDLEWARES
+// Security http headers
+app.use(helmet());
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
