@@ -8,8 +8,19 @@ const Router = express.Router();
 Router.post('/signup', authController.signup);
 Router.post('/login', authController.login);
 
+Router.patch(
+  '/updateCurrentUser',
+  authController.protect,
+  userController.updateMe
+);
+
 Router.post('/forgotPassword', authController.forgotPassword);
 Router.patch('/resetPassword/:token', authController.resetPassword);
+Router.patch(
+  '/changePasswordCurrent',
+  authController.protect,
+  authController.resetPasswordCurrentUser
+);
 
 // User routes
 Router.route('/')

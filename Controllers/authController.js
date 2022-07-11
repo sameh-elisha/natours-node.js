@@ -120,6 +120,21 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   }
 });
 
+exports.resetPasswordCurrentUser = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user._id).select('+password');
+  if (!user) return next(new AppError('User not found'), 400);
+
+  const { oldPassword } = req.body;
+
+  if (!(await user.correctPassword(oldPassword, user.password))) {
+    return next(new AppError('Enter Wrong password!'), 400);
+  }
+  user.password = req.body.newPassword;
+  await user.save();
+  const token = signToken(user._id);
+  res.status(201).json({ status: 'Success', user, token });
+});
+
 exports.resetPassword = catchAsync(async (req, res, next) => {
   const cryptoToken = crypto
     .createHash('sha256')
