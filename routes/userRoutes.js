@@ -8,11 +8,8 @@ const Router = express.Router();
 Router.post('/signup', authController.signup);
 Router.post('/login', authController.login);
 
-Router.patch(
-  '/updateCurrentUser',
-  authController.protect,
-  userController.updateMe
-);
+Router.patch('/updateME', authController.protect, userController.updateMe);
+Router.delete('/deleteMe', authController.protect, userController.deleteMe);
 
 Router.post('/forgotPassword', authController.forgotPassword);
 Router.patch('/resetPassword/:token', authController.resetPassword);
@@ -28,7 +25,7 @@ Router.route('/')
   .post(userController.createUser);
 Router.route('/:id')
   .get(userController.getUser)
-  .patch(userController.updateUser)
-  .delete(userController.deleteUser);
+  .patch(userController.updateUser);
+// .delete(userController.deleteUser);
 
 module.exports = Router;

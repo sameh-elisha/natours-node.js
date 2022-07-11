@@ -33,9 +33,6 @@ exports.createUser = (req, res) => {
   res.status(500).json({ status: 'Error', message: 'Not Ready' });
 };
 
-exports.deleteUser = (req, res) => {
-  res.status(500).json({ status: 'Error', message: 'Not Ready' });
-};
 exports.updateUser = catchAsync(async (req, res, next) => {
   const user = await User.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
@@ -59,4 +56,9 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   if (!user) return next(new AppError('user not found', 404));
 
   res.status(200).json({ status: 'success', user });
+});
+
+exports.deleteMe = catchAsync(async (req, res, next) => {
+  await User.findByIdAndUpdate(req.user._id, { active: false });
+  res.status(204).json({ status: 'success', data: null });
 });
