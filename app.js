@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 
+const limitRate = require('express-rate-limit');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const AppError = require('./utils/appError');
@@ -8,11 +9,16 @@ const globErrorHandler = require('./Controllers/errorController');
 
 const app = express();
 
-// 1) MIDDLEWARES
+// 1) Global MIDDLEWARES
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
-
+const limiter = limitRate({
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: 'Too many requests'
+});
+app.use('/api', limiter);
 app.use(express.json());
 app.use(express.static(`${__dirname}/public`));
 
