@@ -143,6 +143,19 @@ tourSchema.pre(/^find/, function(next) {
     path: 'guides',
     select: '-__v -passwordChangeAt'
   });
+  /*    "guides": ["62cc254a022a1b09d42f6041"] 
+                    TO
+        "guides": 
+         [
+            {
+                "role": "user",
+                "_id": "62cc254a022a1b09d42f6041",
+                "name": "samehelisha",
+                "email": "samehelisha@gmail.com",
+                "id": "62cc254a022a1b09d42f6041"
+            }
+          ]
+  */
   next();
 });
 

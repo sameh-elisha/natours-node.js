@@ -68,6 +68,9 @@ exports.login = catchAsync(async (req, res, next) => {
 
 exports.protect = catchAsync(async (req, res, next) => {
   let token;
+  if (!req.headers.authorization)
+    return next(new AppError('Authentication is must', 401));
+
   if (
     req.headers.authorization ||
     req.headers.authorization.startsWith('Bearer')
