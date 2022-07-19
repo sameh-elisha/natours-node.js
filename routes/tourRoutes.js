@@ -14,7 +14,7 @@ Router.route('/top-five-cheap').get(
 
 // Tour routes
 Router.route('/')
-  .get(authController.protect, tourController.getAllTours)
+  .get(tourController.getAllTours)
   .post(tourController.createTour);
 Router.route('/:id')
   .get(tourController.getTour)
