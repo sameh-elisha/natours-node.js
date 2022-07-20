@@ -110,6 +110,12 @@ const tourSchema = new mongoose.Schema(
   }
 );
 
+tourSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'tour',
+  localField: '_id'
+});
+
 tourSchema.virtual('durationWeeks').get(function() {
   return this.duration / 7;
 });
@@ -119,16 +125,6 @@ tourSchema.pre('save', function(next) {
   this.slug = slugify(this.name, { lower: true });
   next();
 });
-
-// tourSchema.pre('save', function(next) {
-//   console.log('Will save document...');
-//   next();
-// });
-
-// tourSchema.post('save', function(doc, next) {
-//   console.log(doc);
-//   next();
-// });
 
 // QUERY MIDDLEWARE
 // tourSchema.pre('find', function(next) {
@@ -143,19 +139,7 @@ tourSchema.pre(/^find/, function(next) {
     path: 'guides',
     select: '-__v -passwordChangeAt'
   });
-  /*    "guides": ["62cc254a022a1b09d42f6041"] 
-                    TO
-        "guides": 
-         [
-            {
-                "role": "user",
-                "_id": "62cc254a022a1b09d42f6041",
-                "name": "samehelisha",
-                "email": "samehelisha@gmail.com",
-                "id": "62cc254a022a1b09d42f6041"
-            }
-          ]
-  */
+
   next();
 });
 

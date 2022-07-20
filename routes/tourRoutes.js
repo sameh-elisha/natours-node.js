@@ -1,9 +1,20 @@
 const express = require('express');
 const tourController = require('../Controllers/tourController');
 const authController = require('../Controllers/authController');
+const reviewRouter = require('../routes/reviewRoutes');
 
 // Routes
 const Router = express.Router();
+
+Router.use('/:tourId/reviews', reviewRouter);
+/*
+To remove duplicate Code
+Router.route('/:tourId/reviews').post(
+  authController.protect,
+  authController.restrictTo('user'),
+  reviewController.createReview
+);
+*/
 
 Router.route('/tour-status').get(tourController.getTourStatus);
 
