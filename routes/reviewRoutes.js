@@ -18,6 +18,7 @@ Router.route('/:id')
   .patch(
     authController.protect,
     authController.restrictTo('user'),
+    reviewController.setTourUserIds,
     reviewController.updateReview
   )
   .delete(
