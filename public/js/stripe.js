@@ -7,7 +7,7 @@ import keys from '../../config/keys';
 const stripe = Stripe(keys.stripeKey);
 
 export const bookTour = async tourId => {
-  console.log(keys.stripeKey);
+  // console.log(keys.stripeKey);
   try {
     // 1) Get checkout session from API
     const session = await axios(`/api/v1/bookings/checkout-session/${tourId}`);
@@ -18,7 +18,7 @@ export const bookTour = async tourId => {
       sessionId: session.data.session.id
     });
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     showAlert('error', err);
   }
 };
