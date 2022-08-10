@@ -24,7 +24,7 @@
 </p>
 
 ## Deployed Version
-Live demo (Feel free to visit) 👉 : https://lakshman-natours.herokuapp.com/
+Live demo (Feel free to visit) 👉 : https://sameh-elisha-natours.herokuapp.com/
 
 
 ## Key Features
