@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 const pug = require('pug');
 const htmlToText = require('html-to-text');
 
-module.exports = class Email {
+class Email {
   constructor(user, url) {
     this.to = user.email;
     this.firstName = user.name.split(' ')[0];
@@ -64,4 +64,5 @@ module.exports = class Email {
       'Your password reset token (valid for only 10 minutes)'
     );
   }
-};
+}
+module.exports = Email;
